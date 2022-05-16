@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'dart:async';
+import 'dart:io';
+import 'dart:math';
+import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'login_screen.dart';
 //import 'login_screen.dart';
 
@@ -11,6 +16,21 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final _storage = const FlutterSecureStorage();
+  String? username = "";
+  Future<void> _readAll() async {
+    final _username = await _storage.read(key: 'username');
+    setState(() {
+      username = _username;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _readAll();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,8 +56,8 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(
                 height: 10,
               ),
-              const Text("Foulen Ben Foulen",
-                  style: TextStyle(
+              Text(username!,
+                  style: const TextStyle(
                     color: Colors.black54,
                     fontWeight: FontWeight.w500,
                   )),
@@ -66,4 +86,11 @@ class _HomeScreenState extends State<HomeScreen> {
     Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const LoginScreen()));
   }
+}
+
+class _SecItem {
+  _SecItem(this.key, this.value);
+
+  final String key;
+  final String value;
 }

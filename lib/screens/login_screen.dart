@@ -2,6 +2,7 @@ import 'package:camunda_flutter/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
 
 class LoginScreen extends StatefulWidget {
@@ -12,6 +13,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final storage = new FlutterSecureStorage();
   final _formKey = GlobalKey<FormState>();
   //editing controllers
   final TextEditingController userNameController = new TextEditingController();
@@ -126,6 +128,9 @@ class _LoginScreenState extends State<LoginScreen> {
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => const HomeScreen()));
         Fluttertoast.showToast(msg: "Login $username");
+        // Write value
+        await storage.write(key: 'username', value: username);
+        await storage.write(key: 'password', value: password);
       } else {
         Fluttertoast.showToast(msg: "Incorrect credentials");
       }
