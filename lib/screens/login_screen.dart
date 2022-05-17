@@ -16,8 +16,10 @@ class _LoginScreenState extends State<LoginScreen> {
   final storage = new FlutterSecureStorage();
   final _formKey = GlobalKey<FormState>();
   //editing controllers
-  final TextEditingController userNameController = new TextEditingController();
-  final TextEditingController passwordController = new TextEditingController();
+  final TextEditingController userNameController =
+      new TextEditingController(text: "etudiant");
+  final TextEditingController passwordController =
+      new TextEditingController(text: "bpm");
 
   @override
   Widget build(BuildContext context) {
@@ -122,8 +124,6 @@ class _LoginScreenState extends State<LoginScreen> {
               "http://digitalisi.tn:8080/engine-rest/process-definition/"),
           headers: <String, String>{'authorization': basicAuth});
 
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
       if (response.statusCode == 200) {
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => const HomeScreen()));
