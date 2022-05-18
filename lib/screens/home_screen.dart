@@ -1,4 +1,5 @@
 import 'package:camunda_flutter/models/process.dart';
+import 'package:camunda_flutter/screens/process_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:async';
@@ -85,7 +86,18 @@ class _HomeScreenState extends State<HomeScreen> {
               itemCount: _list.length,
               itemBuilder: (BuildContext context, int index) {
                 return InkWell(
-                  onTap: () => print(_list[index].id),
+                  onTap: () => {
+                    print(_list[index].id),
+
+                    // Step 3 <-- SEE HERE
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProcessForm(
+                            id: _list[index].id!, name: _list[index].name!),
+                      ),
+                    )
+                  },
                   child: Column(
                     children: [
                       Text(

@@ -17,9 +17,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   //editing controllers
   final TextEditingController userNameController =
-      new TextEditingController(text: "etudiant");
+      TextEditingController(text: "etudiant");
   final TextEditingController passwordController =
-      new TextEditingController(text: "bpm");
+      TextEditingController(text: "bpm");
 
   @override
   Widget build(BuildContext context) {
