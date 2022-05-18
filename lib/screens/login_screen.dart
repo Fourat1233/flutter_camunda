@@ -13,13 +13,37 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final storage = new FlutterSecureStorage();
-  final _formKey = GlobalKey<FormState>();
+  String? username = "";
+  String? password = "";
+  String basicAuth = "init";
+
+  final storage = const FlutterSecureStorage();
+
+  Future<void> _getLoggedUser() async {
+    final _username = await storage.read(key: 'username');
+    final _password = await storage.read(key: 'password');
+    setState(() {
+      username = _username;
+      password = _password;
+      basicAuth = 'Basic ' + base64Encode(utf8.encode('$_username:$_password'));
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getLoggedUser().then((value) => {
+          if (username != null && username != "")
+            {
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const HomeScreen()))
+            }
+        });
+  }
+
   //editing controllers
-  final TextEditingController userNameController =
-      TextEditingController(text: "etudiant");
-  final TextEditingController passwordController =
-      TextEditingController(text: "bpm");
+  final TextEditingController userNameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {

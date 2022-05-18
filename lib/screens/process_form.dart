@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -26,6 +24,7 @@ class _ProcessFormState extends State<ProcessForm> {
   Future<void> _getLoggedUser() async {
     final _username = await _storage.read(key: 'username');
     final _password = await _storage.read(key: 'password');
+
     setState(() {
       username = _username;
       password = _password;
@@ -40,8 +39,6 @@ class _ProcessFormState extends State<ProcessForm> {
         headers: <String, String>{'authorization': basicAuth});
 
     if (response.statusCode == 200) {
-      var res = json.decode(response.body);
-
       Map<String, dynamic> map = json.decode(response.body);
       for (MapEntry e in map.entries) {
         //  print("Key ${e.key}, Value ${(e.value['type'])}");
@@ -80,11 +77,9 @@ class _ProcessFormState extends State<ProcessForm> {
                     children: [
                       Align(
                         alignment: Alignment.centerLeft,
-                        child: Container(
-                          child: Text(
-                            _list![index].key,
-                            style: TextStyle(fontSize: 15),
-                          ),
+                        child: Text(
+                          _list![index].key,
+                          style: const TextStyle(fontSize: 15),
                         ),
                       ),
                       const SizedBox(height: 10),
@@ -138,7 +133,6 @@ class _ProcessFormState extends State<ProcessForm> {
       i++;
     });
     variables = variables + "}}";
-    print(((variables)));
 
     var response =
         await http.post(
@@ -168,7 +162,6 @@ class _SecItem {
 
   @override
   String toString() {
-    // TODO: implement toString
     return " \"$key\": { \"value\": \"$value\",\"type\": \"String\"} ";
   }
 }

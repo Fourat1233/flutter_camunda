@@ -3,10 +3,6 @@ import 'package:camunda_flutter/screens/process_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:async';
-import 'dart:io';
-import 'dart:math';
-import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'login_screen.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -37,8 +33,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<List<Process_def>> _getProcessList() async {
-    List<Process_def> _processList;
-
     var response = await http.get(
         Uri.parse(
             "http://digitalisi.tn:8080/engine-rest/process-definition?latest=true"),
@@ -51,7 +45,6 @@ class _HomeScreenState extends State<HomeScreen> {
         _list = data
             .map<Process_def>((json) => Process_def.fromJson(json))
             .toList();
-        print(_list);
       });
     } else {
       //show toast here
@@ -80,63 +73,54 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
-        body: Container(
-          child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: _list.length,
-              itemBuilder: (BuildContext context, int index) {
-                return InkWell(
-                  onTap: () => {
-                    print(_list[index].id),
-
-                    // Step 3 <-- SEE HERE
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ProcessForm(
-                            id: _list[index].id!, name: _list[index].name!),
+        body: ListView.builder(
+            shrinkWrap: true,
+            itemCount: _list.length,
+            itemBuilder: (BuildContext context, int index) {
+              return InkWell(
+                onTap: () => {
+                  // Step 3 <-- SEE HERE
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProcessForm(
+                          id: _list[index].id!, name: _list[index].name!),
+                    ),
+                  )
+                },
+                child: Column(
+                  children: [
+                    Text(
+                      _list[index].id!,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
                       ),
-                    )
-                  },
-                  child: Column(
-                    children: [
-                      Text(
-                        _list[index].id!,
+                    ),
+                    Container(
+                      color: Colors.redAccent,
+                      margin: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(15),
+                      alignment: Alignment.center,
+                      child: Text(
+                        _list[index].name!,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 22,
                         ),
                       ),
-                      Container(
-                        color: Colors.redAccent,
-                        margin: const EdgeInsets.all(10),
-                        padding: const EdgeInsets.all(15),
-                        alignment: Alignment.center,
-                        child: Text(
-                          _list[index].name!,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 22,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }),
-        ));
+                    ),
+                  ],
+                ),
+              );
+            }));
   }
 
   // the logout function
   Future<void> logout(BuildContext context) async {
+    _storage.write(key: 'username', value: null);
+    _storage.write(key: 'password', value: null);
     Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const LoginScreen()));
   }
-}
-
-class _SecItem {
-  _SecItem(this.key, this.value);
-
-  final String key;
-  final String value;
 }
